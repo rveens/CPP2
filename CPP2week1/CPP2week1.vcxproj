@@ -16,6 +16,9 @@
   <ItemGroup>
     <ClInclude Include="Text.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Opdracht.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DCF381BE-E40D-41C1-B7DA-6C85C064B512}</ProjectGuid>
     <RootNamespace>CPP2week1</RootNamespace>
@@ -47,9 +50,10 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

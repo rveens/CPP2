@@ -1,0 +1,40 @@
+Week 1: Tekst
+Bijgevoegde bestanden:
+
+    Bestand Text.cpp (354 B)
+    Bestand Text.h (438 B) 
+
+Deze week gaan we een eigen string-klasse bouwen. Niet omdat die nog niet bestaat, maar om (nog eens) te oefenen met een aantal onderdelen van C++:
+
+    default constructor
+    copy constructor
+    move constructor
+    overige constructors
+    destructor
+    polymorfisme
+    references
+    operator overloading
+    friends
+    try - catch
+    memory leaks 
+
+Aanwijzingen
+Het gebruik van de klasse Text
+
+In bijgevoegd bestand Text.cpp staat mijn main-code. Die moet uiteindelijk gaan werken.
+Definitie van de klasse Text
+
+Een begin van de header-file Text.h is gegeven in de tweede bijgevoegde file.
+Concreet: opdrachten
+
+    Implementeer de klasse in Text.cpp. Voeg daarbij een aantal operatoren toe:
+        + en += om strings aan elkaar te plakken
+        [] om tekens op index te kunnen benaderen
+        << om Text naar een wostream te schrijven.
+        wat je verder nodig hebt... 
+    Schrijf een functie waarin je alle constructors en de destructor test
+    Test ook met de gegeven main-code
+    Vang index-out-of-bounds op met try-catch. Schrijf daarvoor een test.
+    Voorkom memory leaks en test daarop. Zie MSDN voor hulpmiddelen in Visual Studio 
+
+Succes

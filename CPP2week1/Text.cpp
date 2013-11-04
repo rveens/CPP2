@@ -13,3 +13,14 @@ int _tmain(int argc, _TCHAR* argv[])
     wcin.get();
     return 0;
 }
+
+/* stream operators in global scope */
+wostream &operator<<(wostream &wos, const Text &s)
+{
+	return wos;		
+}
+
+wistream &operator>>(wistream &wis, const Text &s)
+{
+	return wis;
+}

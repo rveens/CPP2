@@ -2,14 +2,12 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
-//using std::string;
-//using std::endl;
-//using std::wcout;
-//using std::wcin;
-//using std::wostream;
-//using std::wistream;
+using std::string;
+using std::endl;
+using std::wcout;
+using std::wcin;
+using std::wostream;
+using std::wistream;
 
 class Text
 {
@@ -20,7 +18,7 @@ private:
 public:
     Text();	// default constructor
     Text(const Text &s); // copy constructor
-	Text(const Text &&s); // move copy constructor
+	Text(Text &&s); // move copy constructor
 	~Text(); // destructor
     Text(const char *s); // constructor met char *
     Text(const wchar_t *s); // constructor met wchar_t *

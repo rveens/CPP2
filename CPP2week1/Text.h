@@ -3,6 +3,7 @@
 #include <string>
 
 using std::string;
+using std::wstring;
 using std::endl;
 using std::wcout;
 using std::wcin;
@@ -24,10 +25,14 @@ public:
     Text(const wchar_t *s); // constructor met wchar_t *
     Text(string s); // constructor met std::string
 
-	Text &operator=(Text &s); // copy assignment operator
+	Text &operator=(const Text &s); // copy assignment operator
 	Text &operator=(Text &&s); // move assignment operator
-    Text &operator += (Text s); // += operator
-    wchar_t &operator [] (int i); // [] operator
+    Text &operator+=(Text s); // += operator
+	Text &operator+(Text s); // + operator
+    wchar_t &operator[](int i); // [] operator
+
+	// TODO
+	bool operatorbool(const Text s); // boolean operator
 
 	friend wostream &operator<<(wostream &wos, const Text &s); // << operator friend 
 	friend wistream &operator>>(wistream &wis, const Text &s); // >> operator friend 

@@ -68,8 +68,8 @@ Text::Text(string s)
 Text::Text(const Text &s) // copy constructor
 {
 	// Stel 'this' in met een kopie van de data van s.
-	size_t size = wcslen(s.data);
-	this->data = new wchar_t[size+1];
+	size_t size = (wcslen(s.data)+1) * 2;
+	this->data = new wchar_t[size];
 
 	wcscpy_s(this->data, size, s.data);
 }
@@ -102,24 +102,38 @@ Text &Text::operator=(Text &&s) // move assignment operator
 	if (s != *this) {
 		this->data = std::move(s.data);
 
-		// voor de zekerheid verwijderen.
+		// pointer zou nu nergens meer naar moeten wijzen.
 		s.data = nullptr;
 	}
 
 	return *this;
 }
 
-Text &Text::operator+=(Text s) // += operator
+Text &Text::operator+=(const Text &s) // += operator
 {
 	// verander 'this' door s er aan toe te voegen. Geef een referentie terug.
+	size_t totalsize = (wcslen(this->data) + wcslen(s.data))*2;
+	wchar_t *b = new wchar_t[totalsize]; // buffer waar ze allebei in passen.
+	// kopieer de data van 'this' er in.
+	wcscpy_s(b, totalsize, this->data);
+	// concat de string van 's' er bij.
+	wcscat_s(b, totalsize, s.data);
+
+	// vernietig huidige data van 'this'
+	if (this->data)
+		delete[] data;
+
+	// stel de buffer in als data
+	this->data = b;
 
 	return *this;
 }
 
-Text &Text::operator+(Text s) // + operator
+Text Text::operator+(const Text &s) // + operator
 {
 	// nieuw object terug met de twee aan elkaar geplakte strings.
-	Text t;
+	Text t = *this;
+	t += s;
 
 	return t;
 }
@@ -129,7 +143,7 @@ wchar_t &Text::operator[](int i) // [] operator
 	return this->data[i]; // TODO check voor errors, exception
 }
 
-bool Text::operator==(Text &other)  // comparison operator
+bool Text::operator==(const Text &other)  // comparison operator
 {
 	if (!this->data || !other.data)
 		return 0;
@@ -137,7 +151,7 @@ bool Text::operator==(Text &other)  // comparison operator
 		return wcscmp(this->data, other.data) == 0;
 }
 
-bool Text::operator!=(Text &other)  // inverted comparison operator
+bool Text::operator!=(const Text &other)  // inverted comparison operator
 {
 	return !(*this == other); // gewoon de andere operator gebruiken!
 }

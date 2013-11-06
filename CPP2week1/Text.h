@@ -17,7 +17,7 @@ private:
     wchar_t *data;
     // todo: zet hier de overige data-members
 public:
-	const static int maxSize = 100;
+	const static int maxSize = 1000;
    
 // functions
 public:
@@ -31,13 +31,13 @@ public:
 
 	Text &operator=(const Text &s); // copy assignment operator
 	Text &operator=(Text &&s); // move assignment operator
-    Text &operator+=(Text s); // += operator
-	Text &operator+(Text s); // + operator
+    Text &operator+=(const Text &s); // += operator
+	Text operator+(const Text &s); // + operator
     wchar_t &operator[](int i); // [] operator
 
 	// TODO
-	bool operator==(Text &other);  // comparison operator
-	bool operator!=(Text &other);  // inverted comparison operator
+	bool operator==(const Text &other);  // comparison operator
+	bool operator!=(const Text &other);  // inverted comparison operator
 
 	friend wostream &operator<<(wostream &wos, const Text &s); // << operator friend 
 	friend wistream &operator>>(wistream &wis, const Text &s); // >> operator friend 

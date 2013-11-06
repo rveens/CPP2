@@ -67,7 +67,11 @@ Text::Text(string s)
 
 Text::Text(const Text &s) // copy constructor
 {
-	// Stel 'this' in met de data van s.
+	// Stel 'this' in met een kopie van de data van s.
+	size_t size = wcslen(s.data);
+	this->data = new wchar_t[size+1];
+
+	wcscpy_s(this->data, size, s.data);
 }
 
 Text::Text(Text &&s) : data(std::move(s.data)) // move constructor
@@ -78,6 +82,14 @@ Text::Text(Text &&s) : data(std::move(s.data)) // move constructor
 Text &Text::operator=(const Text &s) // copy assignment operator
 {
 	// gooi 'this' eerst weg en stop de waardes van de ander in 'this'
+	if (this->data)
+		delete[] this->data;
+
+	// alloceer nieuw
+	size_t size = wcslen(s.data);
+	this->data = new wchar_t[size+1];
+
+	wcscpy_s(this->data, size, s.data);
 
 	return *this;
 }
@@ -114,7 +126,7 @@ Text &Text::operator+(Text s) // + operator
 
 wchar_t &Text::operator[](int i) // [] operator
 {
-	return this->data[i];
+	return this->data[i]; // TODO check voor errors, exception
 }
 
 bool Text::operator==(Text &other)  // comparison operator

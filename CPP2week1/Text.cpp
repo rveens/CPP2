@@ -20,28 +20,49 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 /* constructors */
-Text::Text() : data(new wchar_t[0]) // default constructor
+Text::Text() : data(nullptr) // default constructor
 {
-
+	
 }
 
 Text::Text(const char *s) // constructor met char *
 {
-	delete[] this->data; // data eerst weggooien.
-	this->data = new wchar_t[sizeof(s)]; // data alloceren zodat de nieuwe er in past.
-	// copy s naar data;
+	size_t size = strlen(s);
+	if (size > Text::maxSize)
+		; // error
+	else {
+		size_t convertedChars = 0;
+		this->data = new wchar_t[size+1]; // alloceer nieuw geheugen. + 1 voor nullbyte
+		//mbstowcs(this->data, s, Text::maxSize); // kopieer de gegeven string in het geheugen in de heap.
+		mbstowcs_s(&convertedChars, this->data, size+1, s, _TRUNCATE); // kopieer de gegeven string in het geheugen in de heap.
+	}
 }
 
-Text::Text(const wchar_t *s) /* : data(new wchar_t[strlen(s)]) // constructor met wchar_t * */
+Text::Text(const wchar_t *s) // constructor met wchar_t * */
 {
-	//strcpy(this->data, s);
+	size_t size = wcslen(s);
+	if (size > Text::maxSize)
+		; // error
+	else {
+		this->data = new wchar_t[size+1]; // alloceer nieuw geheugen. + 1 voor nullbyte
+		//wcscpy(this->data, s); // kopieer de gegeven string in het geheugen in de heap.
+		wcscpy_s(this->data, size, s); // kopieer de gegeven string in het geheugen in de heap.
+	}
 }
 
 Text::Text(string s)
 {
-	data = new wchar_t[s.length()];
+	const char *t = s.c_str();
 
-	//strcpy(this->data, s.c_str());
+	size_t size = strlen(t);
+	if (size > Text::maxSize)
+		; // error
+	else {
+		size_t convertedChars = 0;
+		this->data = new wchar_t[size+1]; // alloceer nieuw geheugen. + 1 voor nullbyte
+		//mbstowcs(this->data, t, Text::maxSize); // kopieer de gegeven string in het geheugen in de heap.
+		mbstowcs_s(&convertedChars, this->data, size+1, t, _TRUNCATE); // kopieer de gegeven string in het geheugen in de heap.
+	}
 }
 
 Text::Text(const Text &s) // copy constructor
@@ -49,16 +70,14 @@ Text::Text(const Text &s) // copy constructor
 	// Stel 'this' in met de data van s.
 }
 
-Text::Text(Text &&s) // move constructor
+Text::Text(Text &&s) : data(std::move(s.data)) // move constructor
 {
-	// Gebruik std::move om de ingewanend (data) naar this te gooien.
+
 }
 
 Text &Text::operator=(const Text &s) // copy assignment operator
 {
 	// gooi 'this' eerst weg en stop de waardes van de ander in 'this'
-
-
 
 	return *this;
 }
@@ -68,9 +87,12 @@ Text &Text::operator=(Text &&s) // move assignment operator
 	// kijk of gegeven niet gelijk is aan 'this'. Gebruik std::move om de ingewanend (data) naar this te gooien.
 	// Gooi voor de zekerheid de ingewanden van de ander weg.
 
-	/*if (s != *this) {
+	if (s != *this) {
+		this->data = std::move(s.data);
 
-	}*/
+		// voor de zekerheid verwijderen.
+		s.data = nullptr;
+	}
 
 	return *this;
 }
@@ -93,6 +115,19 @@ Text &Text::operator+(Text s) // + operator
 wchar_t &Text::operator[](int i) // [] operator
 {
 	return this->data[i];
+}
+
+bool Text::operator==(Text &other)  // comparison operator
+{
+	if (!this->data || !other.data)
+		return 0;
+	else
+		return wcscmp(this->data, other.data) == 0;
+}
+
+bool Text::operator!=(Text &other)  // inverted comparison operator
+{
+	return !(*this == other); // gewoon de andere operator gebruiken!
 }
 
 Text::~Text() // destructor

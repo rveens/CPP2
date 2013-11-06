@@ -12,10 +12,14 @@ using std::wistream;
 
 class Text
 {
+// members
 private:
     wchar_t *data;
     // todo: zet hier de overige data-members
-    
+public:
+	const static int maxSize = 100;
+   
+// functions
 public:
     Text();	// default constructor
     Text(const Text &s); // copy constructor
@@ -32,7 +36,8 @@ public:
     wchar_t &operator[](int i); // [] operator
 
 	// TODO
-	bool operatorbool(const Text s); // boolean operator
+	bool operator==(Text &other);  // comparison operator
+	bool operator!=(Text &other);  // inverted comparison operator
 
 	friend wostream &operator<<(wostream &wos, const Text &s); // << operator friend 
 	friend wistream &operator>>(wistream &wis, const Text &s); // >> operator friend 

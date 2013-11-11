@@ -121,7 +121,10 @@ Text Text::operator+(const Text &s) // + operator
 
 wchar_t &Text::operator[](int i) // [] operator
 {
-	return this->data[i]; // TODO check voor errors, exception
+	if (i < 0 || i > (wcslen(this->data)-1) )
+		throw std::out_of_range("operator[] out of range");
+	else
+		return this->data[i]; // TODO check voor errors, exception
 }
 
 bool Text::operator==(const Text &other)  // comparison operator

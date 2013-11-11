@@ -1,28 +1,9 @@
 #include "text.h"
 
-/* main functie */
-int _tmain(int argc, _TCHAR* argv[])
-{
-    Text voornaam = "Henk";
-    Text achternaam;
-    achternaam = "van den Eik";
-    Text naam = voornaam + " ";
-    naam += achternaam;
-    wcout << naam << endl; // Henk van den Eik
-    naam[11] = 'r';
-    wcout << naam << endl; // Henk van der Eik
-    wcin.get();
-    return 0;
-}
-
-
-/* Text implementation */
-
-
 /* constructors */
 Text::Text() : data(nullptr) // default constructor
 {
-	
+	wcout << "Constructor van Test wordt aangeroepen" << endl;
 }
 
 Text::Text(const char *s) // constructor met char *
@@ -76,7 +57,7 @@ Text::Text(const Text &s) // copy constructor
 
 Text::Text(Text &&s) : data(std::move(s.data)) // move constructor
 {
-
+	s.data = nullptr;
 }
 
 Text &Text::operator=(const Text &s) // copy assignment operator
@@ -100,7 +81,7 @@ Text &Text::operator=(Text &&s) // move assignment operator
 	// Gooi voor de zekerheid de ingewanden van de ander weg.
 
 	if (s != *this) {
-		this->data = std::move(s.data);
+		this->data = s.data;
 
 		// pointer zou nu nergens meer naar moeten wijzen.
 		s.data = nullptr;

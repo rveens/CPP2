@@ -1,4 +1,3 @@
-/* #include <tchar.h> */
 #include "Text.h"
 
 /* main functie */
@@ -12,7 +11,7 @@ int main(int argc, char *argv[])
     wcout << naam << endl; // Henk van den Eik
     naam[11] = 'r';
     wcout << naam << endl; // Henk van der Eik
-    wcin.get();
+    //wcin.get();
 
     return 0;
 }

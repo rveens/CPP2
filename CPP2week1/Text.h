@@ -1,6 +1,6 @@
 #ifdef _WIN32 
 #include <tchar.h>
-#elif defined __linux
+#elif defined __linux__
 #include <wchar.h>
 #include <cstring>
 #include <stdexcept>

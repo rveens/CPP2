@@ -14,10 +14,10 @@ Text::Text(const char *s) // constructor met char *
 	else {
 		size_t convertedChars = 0;
 		this->data = new wchar_t[size+1]; // alloceer nieuw geheugen. + 1 voor nullbyte
-#ifdef _WIN32 
-		mbstowcs_s(&convertedChars, this->data, size+1, s, _TRUNCATE); // kopieer de gegeven string in het geheugen in de heap.
-#elif defined _LINUX
-		mbstowcs(this->data, s, Text::maxSize); // kopieer de gegeven string in het geheugen in de heap.
+#ifdef _WIN32
+        mbstowcs_s(&convertedChars, this->data, size+1, s, _TRUNCATE); // kopieer de gegeven string in het geheugen in de heap.
+#elif defined __linux__
+        mbstowcs(this->data, s, size+1); // kopieer de gegeven string in het geheugen in de heap.
 #endif
 	}
 }
@@ -31,7 +31,7 @@ Text::Text(const wchar_t *s) // constructor met wchar_t * */
 		this->data = new wchar_t[size+1]; // alloceer nieuw geheugen. + 1 voor nullbyte
 #ifdef _WIN32 
 		wcscpy_s(this->data, size, s); // kopieer de gegeven string in het geheugen in de heap.
-#elif defined _LINUX
+#elif defined __linux__
 		wcscpy(this->data, s); // kopieer de gegeven string in het geheugen in de heap.
 #endif
 	}
@@ -49,7 +49,7 @@ Text::Text(string s)
 		this->data = new wchar_t[size+1]; // alloceer nieuw geheugen. + 1 voor nullbyte
 #ifdef _WIN32 
 		mbstowcs_s(&convertedChars, this->data, size+1, t, _TRUNCATE); // kopieer de gegeven string in het geheugen in de heap.
-#elif defined _LINUX
+#elif defined __linux__
 		mbstowcs(this->data, t, Text::maxSize); // kopieer de gegeven string in het geheugen in de heap.
 #endif
 	}
@@ -63,7 +63,7 @@ Text::Text(const Text &s) // copy constructor
 
 #ifdef _WIN32 
 	wcscpy_s(this->data, size, s.data);
-#elif defined _LINUX
+#elif defined __linux__
 	wcscpy(this->data, s.data);
 #endif
 }
@@ -86,7 +86,7 @@ Text &Text::operator=(const Text &s) // copy assignment operator
 
 #ifdef _WIN32 
 	wcscpy_s(this->data, size, s.data);
-#elif defined _LINUX
+#elif defined __linux__
 	wcscpy(this->data, s.data);
 #endif
 
@@ -120,7 +120,7 @@ Text &Text::operator+=(const Text &s) // += operator
 	wcscpy_s(b, totalsize, this->data);
 	// concat de string van 's' er bij.
 	wcscat_s(b, totalsize, s.data);
-#elif defined _LINUX
+#elif defined __linux__
 	// kopieer de data van 'this' er in.
 	wcscpy(b, this->data);
 	// concat de string van 's' er bij.

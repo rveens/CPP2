@@ -6,12 +6,10 @@ set (Tutorial_VERSION_MINOR 0)
 
 add_definitions(-std=c++11)
 
-file(GLOB test_SRC
-	"*.h"
-	"*.cpp"
-)
+file(GLOB SRC . *.cpp *.h)
+
 include_directories("${PROJECT_BINARY_DIR}")
 
 set( EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/build" )
 
-add_executable(Test ${test_SRC})
+add_executable(Test Text.cpp main.cpp Text.h)

@@ -1,4 +1,4 @@
-#include "text.h"
+#include "Text.h"
 
 /* constructors */
 Text::Text() : data(nullptr) // default constructor
@@ -14,8 +14,11 @@ Text::Text(const char *s) // constructor met char *
 	else {
 		size_t convertedChars = 0;
 		this->data = new wchar_t[size+1]; // alloceer nieuw geheugen. + 1 voor nullbyte
-		//mbstowcs(this->data, s, Text::maxSize); // kopieer de gegeven string in het geheugen in de heap.
+#ifdef _WIN32 
 		mbstowcs_s(&convertedChars, this->data, size+1, s, _TRUNCATE); // kopieer de gegeven string in het geheugen in de heap.
+#elif defined _LINUX
+		mbstowcs(this->data, s, Text::maxSize); // kopieer de gegeven string in het geheugen in de heap.
+#endif
 	}
 }
 
@@ -26,8 +29,11 @@ Text::Text(const wchar_t *s) // constructor met wchar_t * */
 		; // error
 	else {
 		this->data = new wchar_t[size+1]; // alloceer nieuw geheugen. + 1 voor nullbyte
-		//wcscpy(this->data, s); // kopieer de gegeven string in het geheugen in de heap.
+#ifdef _WIN32 
 		wcscpy_s(this->data, size, s); // kopieer de gegeven string in het geheugen in de heap.
+#elif defined _LINUX
+		wcscpy(this->data, s); // kopieer de gegeven string in het geheugen in de heap.
+#endif
 	}
 }
 
@@ -41,8 +47,11 @@ Text::Text(string s)
 	else {
 		size_t convertedChars = 0;
 		this->data = new wchar_t[size+1]; // alloceer nieuw geheugen. + 1 voor nullbyte
-		//mbstowcs(this->data, t, Text::maxSize); // kopieer de gegeven string in het geheugen in de heap.
+#ifdef _WIN32 
 		mbstowcs_s(&convertedChars, this->data, size+1, t, _TRUNCATE); // kopieer de gegeven string in het geheugen in de heap.
+#elif defined _LINUX
+		mbstowcs(this->data, t, Text::maxSize); // kopieer de gegeven string in het geheugen in de heap.
+#endif
 	}
 }
 
@@ -52,7 +61,11 @@ Text::Text(const Text &s) // copy constructor
 	size_t size = (wcslen(s.data)+1) * 2;
 	this->data = new wchar_t[size];
 
+#ifdef _WIN32 
 	wcscpy_s(this->data, size, s.data);
+#elif defined _LINUX
+	wcscpy(this->data, s.data);
+#endif
 }
 
 Text::Text(Text &&s) : data(std::move(s.data)) // move constructor
@@ -70,7 +83,12 @@ Text &Text::operator=(const Text &s) // copy assignment operator
 	size_t size = wcslen(s.data);
 	this->data = new wchar_t[size+1];
 
+
+#ifdef _WIN32 
 	wcscpy_s(this->data, size, s.data);
+#elif defined _LINUX
+	wcscpy(this->data, s.data);
+#endif
 
 	return *this;
 }
@@ -95,10 +113,19 @@ Text &Text::operator+=(const Text &s) // += operator
 	// verander 'this' door s er aan toe te voegen. Geef een referentie terug.
 	size_t totalsize = (wcslen(this->data) + wcslen(s.data))*2;
 	wchar_t *b = new wchar_t[totalsize]; // buffer waar ze allebei in passen.
+
+
+#ifdef _WIN32 
 	// kopieer de data van 'this' er in.
 	wcscpy_s(b, totalsize, this->data);
 	// concat de string van 's' er bij.
 	wcscat_s(b, totalsize, s.data);
+#elif defined _LINUX
+	// kopieer de data van 'this' er in.
+	wcscpy(b, this->data);
+	// concat de string van 's' er bij.
+	wcscat(b, s.data);
+#endif
 
 	// vernietig huidige data van 'this'
 	if (this->data)

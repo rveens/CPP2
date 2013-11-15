@@ -1,4 +1,13 @@
+#ifdef _WIN32 
 #include <tchar.h>
+#elif defined __linux
+#include <wchar.h>
+#include <cstring>
+#include <stdexcept>
+#else
+#error undefined platform!
+#endif
+
 #include <iostream>
 #include <string>
 

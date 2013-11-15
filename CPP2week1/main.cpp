@@ -1,8 +1,8 @@
-#include <tchar.h>
-#include "text.h"
+/* #include <tchar.h> */
+#include "Text.h"
 
 /* main functie */
-int _tmain(int argc, _TCHAR* argv[])
+int main(int argc, char *argv[])
 {
     Text voornaam = "Henk";
     Text achternaam;

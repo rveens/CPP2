@@ -19,6 +19,7 @@ using std::wcin;
 using std::wostream;
 using std::wistream;
 
+
 class Text
 {
 // members

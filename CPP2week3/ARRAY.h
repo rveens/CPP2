@@ -7,7 +7,7 @@ class ARRAY
 {
 // public functions
 public:
-	ARRAY(void) : mpData(new T[DEFAULT_SIZE]() ), mCapacity(DEFAULT_SIZE)
+	ARRAY(void) : mpData(nullptr), mCapacity(DEFAULT_SIZE)
 	{
 		
 	}
@@ -22,9 +22,14 @@ public:
 		delete[] this->mpData;
 	}
 
-	T &operator[](size_t position)
+	T &operator[](int position)
 	{
-		size_t t = this->capacity();
+		int t = this->capacity();
+
+		if (position == -1) {
+			this->increaseSize(1);
+			position = this->capacity() - 1;
+		}
 
 		if (position < 0 || position > (this->capacity() - 1) )
 			throw std::out_of_range("ARRAY position out of range");
@@ -32,59 +37,75 @@ public:
 		return this->mpData[position];
 	}
 
-	size_t length() const
+	int length() const
 	{
-		size_t tempSizeCounter, tempCapacity;
+		int tempSizeCounter, tempCapacity;
 
 		tempSizeCounter = 0;
 		tempCapacity = this->capacity();
 
-		for (size_t i = 0; i < tempCapacity; ++i)
+		for (int i = 0; i < tempCapacity; ++i)
 			if (this->mpData[i])
 				tempSizeCounter++;
 
 		return tempSizeCounter;
 	}
 
-	size_t capacity() const
+	int capacity() const
 	{
 		return mCapacity;
 	}
 
+	void increaseSize(size_t amount)
+	{
+		T *mpDataTemporaryCopy = nullptr;
+
+		// kopie maken
+		if (this->mpData) {
+			mpDataTemporaryCopy = new T[this->capacity()]();
+			memcpy(mpDataTemporaryCopy, mpData, this->capacity());
+
+			delete[] this->mpData;
+		}
+
+		// nieuwe array grootte maken.
+		this->mpData = new T[this->capacity() + amount]();
+
+		// oude data terug zetten
+		if (mpDataTemporaryCopy) {
+			memcpy(this->mpData, mpDataTemporaryCopy, this->capacity());
+			delete[] mpDataTemporaryCopy;
+		}
+
+		// capacity is nu een groter geworden.
+		this->mCapacity += amount;
+	}
+
 	bool append(T newObject)
 	{
-		return false;
-		//if (this->mIndex < this->capacity()) {
-		//	for(size_t i = 0; i < this->capacity(); ++i)
-		//		if (!this->mpData[i]) {
-		//			this->mpData[this->size++];
-		//			break;
-		//		}
-		//	return true;
-		//} else if (this->mIndex == this->capacity()) { // hij is vol
-		//	 TODO maak een kopie, vernietig het oude, alloceer nieuw en zet terug.
+		// zoek een leeg plekje.
+		if (this->mpData) {
+		for (int i = 0; i < this->capacity() - 1; ++i)
+			if (!this-mpData[i]) {
+				// leeg plekje gevonden.
+				this->mpData[i] = newObject;
+				return true;
+			}
+		}
 
-		//	 kopie maken
-		//	T *mpDataTemporaryCopy = new T[this->capacity()];
-		//	memcpy(mpDataTemporaryCopy, mpData, this->capacity());
+		// geen leeg plekje gevonden. we moeten geheugen alloceren.
+		increaseSize(1);
 
-		//	 nieuwe array grootte maken.
-		//	delete[] this->mpData;
-		//	this->mpData = new T[sizeof(mpDataTemporaryCopy) + 1];
+		// gegeven waarden achteraan gooien.
+		this->mpData[this->capacity() - 1] = newObject;
 
-		//	 oude data terug zetten
-		//	memcpy(this->mpData, mpDataTemporaryCopy, sizeof(mpDataTemporaryCopy));
-
-		//	 nieuw object toevoegen
-		//	this->mpData[this->mIndex++];
-		//} else
-		//	return false;
+		return true;
 	}
 
 // private members
 private:
 	T *mpData;
-	size_t mCapacity;
-	static const unsigned int DEFAULT_SIZE = 1;
+	int mCapacity;
+	static const unsigned int DEFAULT_SIZE = 0;
 };
 

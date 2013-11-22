@@ -35,14 +35,16 @@ void week3b()
 	{
 	   cout << "lijst[" << i << "]=" << lijst[i] << endl;
 	}
-	lijst[2] = 14; // moet een exception genereren 
+	lijst[2] = 14; // moet een exception genereren
 }
 
 int main(int argc, char *argv[])
 {
+	// voor memory leaks
 #ifdef _WIN32
 	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
+
 	week3a();
 	week3b();
 
